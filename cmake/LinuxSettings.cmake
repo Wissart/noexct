@@ -1,0 +1,1 @@
+message(STATUS "Configuration for Linux(NOT USE)")

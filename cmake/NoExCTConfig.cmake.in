@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/NoExCTTargets.cmake")
+
+set(NoExCT_FOUND TRUE)
+set(NoExCT_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set(NoExCT_LIBRARIES NoExCT::NoExCT)
+
+check_required_components(NoExCT)
