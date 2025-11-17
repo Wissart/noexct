@@ -7,15 +7,17 @@
 
 namespace noexct{
     
+using TestFunc = std::function<void()>;
+
 class TestCase{
 private:
     std::string name;
-    std::function<void()> test_func;
+    TestFunc test_func;
     bool passed;
     double duration;
     std::string error_message;
 public:
-    TestCase(const std::string& name, std::function<void()> test_func);
+    TestCase(const std::string& name, TestFunc test_func);
 
     const std::string& get_name() const;
     bool is_passed() const;
