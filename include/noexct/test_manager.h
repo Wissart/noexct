@@ -9,16 +9,28 @@
 
 namespace noexct{
 
-class NOEXCT_API TestBuilder{
+class NOEXCT_API TestManager{
 public:
     using creator_func = TestFixture*(*)();
 
-    static std::vector<std::shared_ptr<TestSuite>>& get_test_suites();
+    static TestManager& instance();
+
+    std::vector<std::shared_ptr<TestSuite>>& get_suites();
     
-    static void add_test_suite(const char* name);
-    static void add_test_case(const char* name, std::function<void()> func);
-    static void add_suite_fixture(creator_func creator);
-    static void add_case_fixture(creator_func creator);
+    template<typename TestCaseType>
+    void add_case(const char* name, std::function<void()> func){
+        static_assert(std::is_base_of<TestCase, TestCaseType>::value,
+                        "TestCaseType must be derived from TestCase");
+        if(auto suite = suites.back()){ 
+            suite->add_test_case(std::make_shared<TestCaseType>(name, func)); 
+        }
+    }
+
+    void add_suite(const char* suite_name);
+    void add_suite_fixture(creator_func creator);
+    void add_case_fixture(creator_func creator);
+private:
+    std::vector<std::shared_ptr<TestSuite>> suites; 
 };
 
 }
@@ -27,7 +39,7 @@ public:
     namespace { \
         struct SuiteInitializer_##name { \
             SuiteInitializer_##name() { \
-                noexct::TestBuilder::add_test_suite(#name); \
+                noexct::TestManager::instance().add_suite(#name); \
             } \
         } suite_init_##name; \
     };
@@ -37,7 +49,7 @@ public:
     namespace { \
         struct TestRegistrar_##name { \
             TestRegistrar_##name() { \
-                noexct::TestBuilder::add_test_case(#name, &name); \
+                noexct::TestManager::instance().add_case<noexct::TestCase>(#name, &name); \
             } \
         } TestRegistrar_##name; \
     } \
@@ -50,7 +62,7 @@ public:
                 return new class_name(); \
             } \
             SuiteFixtureInitializer_##class_name() { \
-                noexct::TestBuilder::add_suite_fixture(&create_instance); \
+                noexct::TestManager::instance().add_suite_fixture(&create_instance); \
             } \
         } suite_fixture_init_##class_name; \
     };
@@ -62,7 +74,7 @@ public:
                 return new class_name(); \
             } \
             CaseFixtureInitializer_##class_name() { \
-                noexct::TestBuilder::add_case_fixture(&create_instance); \
+                noexct::TestManager::instance().add_case_fixture(&create_instance); \
             } \
         } case_fixture_init_##class_name; \
     };

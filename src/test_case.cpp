@@ -6,7 +6,7 @@
 
 namespace noexct{
 
-TestCase::TestCase(const std::string& name, std::function<void()> test_func) 
+TestCase::TestCase(const std::string& name, TestFunc test_func) 
 : name(name) , test_func(test_func), passed(false) {}
 
 

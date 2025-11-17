@@ -3,7 +3,7 @@ include(GNUInstallDirs)
 set(NOEXCT_SOURCES
     test_case.cpp
     test_suite.cpp
-    test_builder.cpp
+    test_manager.cpp
     assertions.cpp
     runner.cpp
     test_engine.cpp
