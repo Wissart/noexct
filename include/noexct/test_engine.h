@@ -1,6 +1,5 @@
 #pragma once
 
-#include "test_fixture.h"
 #include "test_case.h"
 #include "test_suite.h"
 #include "test_manager.h"
