@@ -38,10 +38,10 @@ public:
     void printL(const char* message){
         std::cout << message << '\n';
     }
-    void print_test_start(const TestCase&){
+    void print_test_start(const ITestCase&){
         return;
     }
-    void print_test_result(const TestCase& test_case){
+    void print_test_result(const ITestCase& test_case){
 
         if(test_case.is_passed()){
             SET_COLOR(GREEN);
@@ -97,10 +97,10 @@ public:
 ConsoleReporter::ConsoleReporter() : console(std::make_unique<ConsoleWorker>()){}
 ConsoleReporter::~ConsoleReporter() = default;
 
-void ConsoleReporter::report_test_start(const TestCase& test_case){
+void ConsoleReporter::report_test_start(const ITestCase& test_case){
     console->print_test_start(test_case);
 }
-void ConsoleReporter::report_test_result(const TestCase& test_case){
+void ConsoleReporter::report_test_result(const ITestCase& test_case){
     console->print_test_result(test_case);
 }
 void ConsoleReporter::report_suite_start(const TestSuite& test_suite){

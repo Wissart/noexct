@@ -7,7 +7,7 @@ TestSuite::TestSuite(const std::string& name)
 : name(name) {}
 
 const std::string& TestSuite::get_name() const { return name; }
-const std::vector<std::shared_ptr<TestCase>>& TestSuite::get_test_cases() const { return test_cases;}
+const std::vector<std::shared_ptr<ITestCase>>& TestSuite::get_test_cases() const { return test_cases;}
 
 size_t TestSuite::get_passed_count() const {
     size_t passed_count = 0;
@@ -27,7 +27,7 @@ size_t TestSuite::get_failed_count() const {
     return failed_count;
 }
 
-void TestSuite::add_test_case(std::shared_ptr<TestCase> test_case){
+void TestSuite::add_test_case(std::shared_ptr<ITestCase> test_case){
     test_cases.push_back(test_case);
 }
 

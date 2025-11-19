@@ -3,6 +3,7 @@
 #include <memory>
 #include <functional>
 
+#include "test.h"
 #include "test_fixture.h"
 #include "test_suite.h"
 #include "noexct_export.h"
@@ -16,17 +17,17 @@ public:
     static TestManager& instance();
 
     std::vector<std::shared_ptr<TestSuite>>& get_suites();
-    
-    template<typename TestCaseType>
-    void add_case(const char* name, std::function<void()> func){
-        static_assert(std::is_base_of<TestCase, TestCaseType>::value,
-                        "TestCaseType must be derived from TestCase");
-        if(auto suite = suites.back()){ 
-            suite->add_test_case(std::make_shared<TestCaseType>(name, func)); 
-        }
-    }
 
     void add_suite(const char* suite_name);
+    template<typename TestType>
+    void add_case(const char* name, 
+                  typename TestCase<TestType>::TestMethod method){
+        static_assert(std::is_base_of<Test, TestType>::value,
+                        "TestType must be derived from Test");
+        if(auto suite = suites.back()){ 
+            suite->add_test_case(std::make_shared<TestCase<TestType>>(name, method)); 
+        }
+    }
     void add_suite_fixture(creator_func creator);
     void add_case_fixture(creator_func creator);
 private:
@@ -44,16 +45,20 @@ private:
         } suite_init_##name; \
     };
 
-#define TEST_CASE(name) \
-    void name(); \
+#define TEST_CASE(testname) \
+    class testname##_Test : public noexct::Test { \
+    public: \
+        testname##_Test() = default; \
+        void test_body(); \
+    }; \
     namespace { \
-        struct TestRegistrar_##name { \
-            TestRegistrar_##name() { \
-                noexct::TestManager::instance().add_case<noexct::TestCase>(#name, &name); \
+        struct testname##_registrator { \
+            testname##_registrator() { \
+                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
             } \
-        } TestRegistrar_##name; \
+        } testname##_registrator_instatnce; \
     } \
-    void name()
+    void testname##_Test::test_body()
 
 #define SUITE_FIXTURE(class_name) \
     namespace { \
