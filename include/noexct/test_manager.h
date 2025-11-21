@@ -16,6 +16,14 @@ public:
     std::vector<std::shared_ptr<TestSuite>>& get_suites();
 
     void add_suite(const char* suite_name);
+    template<typename FixtureType>
+    void add_suite_fixture(){
+        static_assert(std::is_base_of<Test, FixtureType>::value,
+                        "FixtureType must be derived from Test");
+        if(auto suite = suites.back()){ 
+            suite->add_fixture(std::make_shared<FixtureType>()); 
+        }
+    }
     template<typename TestType>
     void add_case(const char* name, 
                   typename TestCase<TestType>::TestMethod method){
@@ -56,7 +64,14 @@ private:
 
 
 #define FIXTURE(classname) \
-    using _SuiteFixture = classname;
+    using _SuiteFixture = classname; \
+    namespace { \
+        struct classname##_suite_fixture_registrator { \
+            classname##_suite_fixture_registrator() { \
+                noexct::TestManager::instance().add_suite_fixture<classname>(); \
+            } \
+        } classname##_suite_fixture_registrator_instatnce; \
+    } \
 
 #define TEST_SF(testname) \
     class testname##_Test : public _SuiteFixture { \

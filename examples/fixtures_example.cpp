@@ -3,15 +3,12 @@
 
 class SuiteFixture : public noexct::Test {
 public:
-    void setup() override{
+    void suite_setup() override{
         std::cout << "SuiteFixture: setup()" << std::endl;
     }
-    void teardown() override{
+    void suite_teardown() override{
         std::cout << "SuiteFixture: teardown()" << std::endl;
     }
-};
-class CaseFixture : public noexct::Test {
-public:
     void setup() override{
         std::cout << "CaseFixture: setup()" << std::endl;
     }
@@ -19,6 +16,7 @@ public:
         std::cout << "CaseFixture: teardown()" << std::endl;
     }
 };
+
 class UniqCaseFixture : public noexct::Test {
 public:
     void setup() override{
@@ -33,7 +31,7 @@ public:
 
 TEST_SUITE(FIXTURES_EXAMPLE)
 
-FIXTURE(CaseFixture)
+FIXTURE(SuiteFixture)
 
 TEST_F(UniqCaseFixture, CASE_NAME_PASS){
     ASSERT_EQ(2,2)

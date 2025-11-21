@@ -27,8 +27,19 @@ size_t TestSuite::get_failed_count() const {
     return failed_count;
 }
 
+void TestSuite::add_fixture(std::shared_ptr<SuiteFixture> suite_fixture) { fixture = suite_fixture; }
+
 void TestSuite::add_test_case(std::shared_ptr<ITestCase> test_case){
     test_cases.push_back(test_case);
+}
+
+void TestSuite::setup(){
+    if(!fixture) return;
+     fixture->suite_setup(); 
+}
+void TestSuite::teardown(){ 
+    if(!fixture) return;
+    fixture->suite_teardown();
 }
 
 void TestSuite::run(){
