@@ -52,22 +52,18 @@ void Runner::run_all(){
     for(auto test_suite : test_suites){
         if(!test_suite) continue;
 
-        test_suite->setup_suite_fixture();
-
+        
         reporter->report_suite_start(*test_suite);
-
+        test_suite->setup();
 
         for(auto test_case : test_suite->get_test_cases()){
-            test_suite->setup_case_fixture();
             reporter->report_test_start(*test_case);
             test_case->run();
             reporter->report_test_result(*test_case);
-            test_suite->teardown_case_fixture();
         }
-
+        test_suite->teardown();
         reporter->report_suite_result(*test_suite);
 
-        test_suite->teardown_suite_fixture();
     }
     reporter->report_summary(test_suites);
 }

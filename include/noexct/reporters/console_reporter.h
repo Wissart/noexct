@@ -10,8 +10,8 @@ public:
     ConsoleReporter();
     ~ConsoleReporter() override;
 
-    virtual void report_test_start(const TestCase& test_case) override;
-    virtual void report_test_result(const TestCase& test_case) override;
+    virtual void report_test_start(const ITestCase& test_case) override;
+    virtual void report_test_result(const ITestCase& test_case) override;
     virtual void report_suite_start(const TestSuite& test_suite) override;
     virtual void report_suite_result(const TestSuite& test_suite) override;
 

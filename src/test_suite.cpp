@@ -7,7 +7,7 @@ TestSuite::TestSuite(const std::string& name)
 : name(name) {}
 
 const std::string& TestSuite::get_name() const { return name; }
-const std::vector<std::shared_ptr<TestCase>>& TestSuite::get_test_cases() const { return test_cases;}
+const std::vector<std::shared_ptr<ITestCase>>& TestSuite::get_test_cases() const { return test_cases;}
 
 size_t TestSuite::get_passed_count() const {
     size_t passed_count = 0;
@@ -27,32 +27,19 @@ size_t TestSuite::get_failed_count() const {
     return failed_count;
 }
 
-void TestSuite::add_test_case(std::shared_ptr<TestCase> test_case){
+void TestSuite::add_fixture(std::shared_ptr<SuiteFixture> suite_fixture) { fixture = suite_fixture; }
+
+void TestSuite::add_test_case(std::shared_ptr<ITestCase> test_case){
     test_cases.push_back(test_case);
 }
 
-void TestSuite::add_suite_fixture(std::shared_ptr<TestFixture> fixture){
-    suite_fixture = fixture;
+void TestSuite::setup(){
+    if(!fixture) return;
+     fixture->suite_setup(); 
 }
-void TestSuite::add_case_fixture(std::shared_ptr<TestFixture> fixture){
-    case_fixture = fixture;
-}
-
-void TestSuite::setup_suite_fixture(){
-    if(suite_fixture)
-        suite_fixture->setup();
-}
-void TestSuite::teardown_suite_fixture(){
-    if(suite_fixture)
-        suite_fixture->teardown();
-}
-void TestSuite::setup_case_fixture(){
-    if(case_fixture)
-        case_fixture->setup();
-}
-void TestSuite::teardown_case_fixture(){
-    if(case_fixture)
-        case_fixture->teardown();
+void TestSuite::teardown(){ 
+    if(!fixture) return;
+    fixture->suite_teardown();
 }
 
 void TestSuite::run(){

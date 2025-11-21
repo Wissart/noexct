@@ -3,7 +3,7 @@
 #include <memory>
 #include <functional>
 
-#include "test_fixture.h"
+#include "test.h"
 #include "test_suite.h"
 #include "noexct_export.h"
 
@@ -11,24 +11,28 @@ namespace noexct{
 
 class NOEXCT_API TestManager{
 public:
-    using creator_func = TestFixture*(*)();
-
     static TestManager& instance();
 
     std::vector<std::shared_ptr<TestSuite>>& get_suites();
-    
-    template<typename TestCaseType>
-    void add_case(const char* name, std::function<void()> func){
-        static_assert(std::is_base_of<TestCase, TestCaseType>::value,
-                        "TestCaseType must be derived from TestCase");
-        if(auto suite = suites.back()){ 
-            suite->add_test_case(std::make_shared<TestCaseType>(name, func)); 
-        }
-    }
 
     void add_suite(const char* suite_name);
-    void add_suite_fixture(creator_func creator);
-    void add_case_fixture(creator_func creator);
+    template<typename FixtureType>
+    void add_suite_fixture(){
+        static_assert(std::is_base_of<Test, FixtureType>::value,
+                        "FixtureType must be derived from Test");
+        if(auto suite = suites.back()){ 
+            suite->add_fixture(std::make_shared<FixtureType>()); 
+        }
+    }
+    template<typename TestType>
+    void add_case(const char* name, 
+                  typename TestCase<TestType>::TestMethod method){
+        static_assert(std::is_base_of<Test, TestType>::value,
+                        "TestType must be derived from Test");
+        if(auto suite = suites.back()){ 
+            suite->add_test_case(std::make_shared<TestCase<TestType>>(name, method)); 
+        }
+    }
 private:
     std::vector<std::shared_ptr<TestSuite>> suites; 
 };
@@ -44,37 +48,55 @@ private:
         } suite_init_##name; \
     };
 
-#define TEST_CASE(name) \
-    void name(); \
+#define TEST_CASE(testname) \
+    class testname##_Test : public noexct::Test { \
+    public: \
+        void test_body(); \
+    }; \
     namespace { \
-        struct TestRegistrar_##name { \
-            TestRegistrar_##name() { \
-                noexct::TestManager::instance().add_case<noexct::TestCase>(#name, &name); \
+        struct testname##_registrator { \
+            testname##_registrator() { \
+                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
             } \
-        } TestRegistrar_##name; \
+        } testname##_registrator_instatnce; \
     } \
-    void name()
+    void testname##_Test::test_body()
 
-#define SUITE_FIXTURE(class_name) \
-    namespace { \
-        struct SuiteFixtureInitializer_##class_name { \
-            static noexct::TestFixture* create_instance(){ \
-                return new class_name(); \
-            } \
-            SuiteFixtureInitializer_##class_name() { \
-                noexct::TestManager::instance().add_suite_fixture(&create_instance); \
-            } \
-        } suite_fixture_init_##class_name; \
-    };
 
-#define CASE_FIXTURE(class_name) \
+#define FIXTURE(classname) \
+    using _SuiteFixture = classname; \
     namespace { \
-        struct CaseFixtureInitializer_##class_name { \
-            static noexct::TestFixture* create_instance(){ \
-                return new class_name(); \
+        struct classname##_suite_fixture_registrator { \
+            classname##_suite_fixture_registrator() { \
+                noexct::TestManager::instance().add_suite_fixture<classname>(); \
             } \
-            CaseFixtureInitializer_##class_name() { \
-                noexct::TestManager::instance().add_case_fixture(&create_instance); \
+        } classname##_suite_fixture_registrator_instatnce; \
+    } \
+
+#define TEST_SF(testname) \
+    class testname##_Test : public _SuiteFixture { \
+    public: \
+        void test_body(); \
+    }; \
+    namespace { \
+        struct testname##_registrator { \
+            testname##_registrator() { \
+                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
             } \
-        } case_fixture_init_##class_name; \
-    };
+        } testname##_registrator_instatnce; \
+    } \
+    void testname##_Test::test_body()
+
+#define TEST_F(fixture, testname) \
+    class testname##_Test : public fixture { \
+    public: \
+        void test_body(); \
+    }; \
+    namespace { \
+        struct testname##_registrator { \
+            testname##_registrator() { \
+                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
+            } \
+        } testname##_registrator_instatnce; \
+    } \
+    void testname##_Test::test_body()
