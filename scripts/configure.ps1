@@ -65,4 +65,5 @@ if($LASTEXITCODE -ne 0){
     exit 1
 }
 
+Set-Location $ProjectRoot
 Write-Host "Configuration completed successfully!" -ForegroundColor Green
