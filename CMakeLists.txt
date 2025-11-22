@@ -1,21 +1,15 @@
 cmake_minimum_required(VERSION 3.15)
 project(NoExCT VERSION 1.0.0 LANGUAGES CXX)
 
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 option(NOEXCT_BUILD_EXAMPLES "Build NoExCT examples" OFF)
 option(NOEXCT_BUILD_SHARED_LIBS "Build NoExCT as shared library" OFF)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-include(CompilerFlags)
-if(MSVC)
-    include(MSVCSettings)
-elseif(UNIX AND NOT APPLE)
-    include(LinuxSettings)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    message("Build Standalone")
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+    include(ProjectSettings)
+else()
+    message("${CMAKE_PROJECTNAME} not equal ${PROJECT_NAME}")
 endif()
 
 add_subdirectory(src)

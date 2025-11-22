@@ -38,3 +38,5 @@ foreach($example in $Examples) {
 
     & $examplePath
 }
+
+Set-Location $ProjectRoot
