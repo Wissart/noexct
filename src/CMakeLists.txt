@@ -37,8 +37,6 @@ set_target_properties(NoExCT PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-set_common_compiler_flags(NoExCT)
-
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/noexct_export.h
     DESTINATION include/noexct
