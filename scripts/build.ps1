@@ -23,10 +23,10 @@ Write-Host "Building project..." -ForegroundColor White
 cmake --build . --config $Config
 
 if($LASTEXITCODE -ne 0) {
+    Set-Location $ProjectRoot
     Write-Host "Build failed!" -ForegroundColor Red
     exit 1
 }
 
-Write-Host "Build completed successfully!" -ForegroundColor Green
-
 Set-Location $ProjectRoot
+Write-Host "Build completed successfully!" -ForegroundColor Green

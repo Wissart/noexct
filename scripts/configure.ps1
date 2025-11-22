@@ -61,6 +61,7 @@ Write-Host "CMake command: cmake $CMakeArgs" -ForegroundColor Gray
 cmake @CMakeArgs
 
 if($LASTEXITCODE -ne 0){
+    Set-Location $ProjectRoot
     Write-Host "Configuration failed!" -ForegroundColor Red
     exit 1
 }
