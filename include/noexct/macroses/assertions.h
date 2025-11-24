@@ -1,26 +1,38 @@
 #define ASSERT_TRUE(expr) \
-    if(!(expr)) { \
-        const char* message = "Assertion failed: "#expr"is not true"; \
-        throw noexct::AssertionFailedException(message); \
-    }
+    do{\
+        if(!(expr)) { \
+            const char* message = "Assertion failed: "#expr"is not true"; \
+            throw noexct::AssertionFailedException(message); \
+        } \
+    }while(0);
 
 #define ASSERT_FALSE(expr) \
-    if(expr) { \
-        const char* message = "Assertion failed: "#expr"is true"; \
-        throw noexct::AssertionFailedException(message); \
-    }
+    do{ \
+        if(expr) { \
+            const char* message = "Assertion failed: "#expr"is true"; \
+            throw noexct::AssertionFailedException(message); \
+        } \
+    }while(0);
 
 #define ASSERT_EQ(a, b) \
-    if((a) != (b)) { \
-        const char* message = "Assertion failed: "#a" != "#b; \
-        throw noexct::AssertionFailedException(message); \
-    }
+    do{ \
+        auto _temp_a = (a); \
+        auto _temp_b = (b); \
+        if(_temp_a != _temp_b) { \
+            const char* message = "Assertion failed: "#a" != "#b; \
+            throw noexct::AssertionFailedException(message); \
+        } \
+    }while(0);
 
 #define ASSERT_NE(a, b) \
-    if((a) == (b)) { \
-        const char* message = "Assertion failed: "#a" == "#b; \
-        throw noexct::AssertionFailedException(message); \
-    }
+    do{ \
+        auto _temp_a = (a); \
+        auto _temp_b = (b); \
+        if(_temp_a == _temp_b) { \
+            const char* message = "Assertion failed: "#a" == "#b; \
+            throw noexct::AssertionFailedException(message); \
+        } \
+    }while(0);
 
 #define ASSERT_THROW(expr, exception_type) \
     try { \

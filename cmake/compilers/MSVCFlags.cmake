@@ -29,6 +29,9 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
         /GL
         /MD
     )
+    add_link_options(
+        /LTCG
+    )
 endif()
 
 add_compile_options(
