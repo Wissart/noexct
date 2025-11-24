@@ -1,4 +1,4 @@
-#include "noexct/assertions.h"
+#include "noexct/exceptions.h"
 
 
 namespace noexct {
