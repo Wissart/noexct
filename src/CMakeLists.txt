@@ -1,12 +1,13 @@
 include(GNUInstallDirs) 
 
 set(NOEXCT_SOURCES
-    test_suite.cpp
-    test_manager.cpp
-    exceptions.cpp
-    runner.cpp
-    test_engine.cpp
-    reporters/console_reporter.cpp
+    Exceptions.cpp
+    Suite.cpp
+    TestBuilder.cpp
+    TestCollection.cpp
+    TestManager.cpp
+    TestRunner.cpp
+    reporters/ConsoleReporter.cpp
 )
 
 if(NOEXCT_BUILD_SHARED_LIBS)

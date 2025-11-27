@@ -1,5 +1,5 @@
 #include <iostream>
-#include "noexct/test_engine.h"
+#include "noexct/test-engine.h"
 
 class SuiteFixture : public noexct::Test {
 public:

@@ -2,7 +2,7 @@
     namespace { \
         struct SuiteInitializer_##name { \
             SuiteInitializer_##name() { \
-                noexct::TestManager::instance().add_suite(#name); \
+                noexct::TestManager::instance().get_builder()->create_suite(#name); \
             } \
         } suite_init_##name; \
     };
@@ -15,7 +15,7 @@
     namespace { \
         struct testname##_registrator { \
             testname##_registrator() { \
-                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
+                noexct::TestManager::instance().get_builder()->add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
             } \
         } testname##_registrator_instatnce; \
     } \
@@ -27,7 +27,7 @@
     namespace { \
         struct classname##_suite_fixture_registrator { \
             classname##_suite_fixture_registrator() { \
-                noexct::TestManager::instance().add_suite_fixture<classname>(); \
+                noexct::TestManager::instance().get_builder()->add_suite_fixture<classname>(); \
             } \
         } classname##_suite_fixture_registrator_instatnce; \
     } \
@@ -40,7 +40,7 @@
     namespace { \
         struct testname##_registrator { \
             testname##_registrator() { \
-                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
+                noexct::TestManager::instance().get_builder()->add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
             } \
         } testname##_registrator_instatnce; \
     } \
@@ -54,7 +54,7 @@
     namespace { \
         struct testname##_registrator { \
             testname##_registrator() { \
-                noexct::TestManager::instance().add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
+                noexct::TestManager::instance().get_builder()->add_case<testname##_Test>(#testname, &testname##_Test::test_body); \
             } \
         } testname##_registrator_instatnce; \
     } \

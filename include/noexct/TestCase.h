@@ -4,36 +4,26 @@
 #include <functional>
 #include <chrono>
 
-#include "exceptions.h"
+#include "Exceptions.h"
+#include "CaseInfo.h"
 
 namespace noexct{
 
-class ITestCase{
+class TestCase : public CaseInfo{
 public:
-    virtual ~ITestCase() = default;
-
-    virtual const std::string& get_name() const = 0;
-    virtual bool is_passed() const = 0;
-    virtual double get_duration() const = 0;
-    virtual const std::string& get_error_message() const = 0;
-
     virtual void run() = 0;
-
+protected:
+    explicit TestCase(const std::string name)
+                : CaseInfo(name) {}
 };
 
 template<typename TestType>
-class TestCase : public ITestCase{
+class TypedTestCase : public TestCase{
 public:
     using TestMethod = void (TestType::*)();
 
-    TestCase(const std::string& name, TestMethod method) 
-    : name(name) , test_method(method), passed(false) {}
-
-
-    const std::string& get_name() const override { return name; }
-    bool is_passed() const override { return passed; }
-    double get_duration() const override { return duration; }
-    const std::string& get_error_message() const override { return error_message; }
+    TypedTestCase(const std::string& name, TestMethod method) 
+    : TestCase(name), test_method(method){}
 
     void run() override {
         double start_time = 0;
@@ -53,11 +43,7 @@ public:
         }
     }
 private:
-    std::string name;
     TestMethod test_method;
-    bool passed;
-    double duration;
-    std::string error_message;
 };
 
 }
