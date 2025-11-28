@@ -1,4 +1,4 @@
-#define TEST_SUITE(name) \
+#define SUITE(name) \
     namespace { \
         struct SuiteInitializer_##name { \
             SuiteInitializer_##name() { \
@@ -7,7 +7,7 @@
         } suite_init_##name; \
     };
 
-#define TEST_CASE(testname) \
+#define TEST(testname) \
     class testname##_Test : public noexct::Test { \
     public: \
         void test_body(); \
