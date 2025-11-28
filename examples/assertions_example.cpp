@@ -1,8 +1,8 @@
-#include "noexct/test_engine.h"
+#include "noexct/test-engine.h"
 
-TEST_SUITE(ASSERTIONS_EXAMPLE)
+SUITE(ASSERTIONS_EXAMPLE)
 
-TEST_CASE(BASE_ASSERTTIONS){
+TEST(BASE_ASSERTTIONS){
     ASSERT_EQ(2,2)
     ASSERT_NE(2,1)
     ASSERT_TRUE(true)

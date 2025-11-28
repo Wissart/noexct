@@ -1,12 +1,12 @@
-#include "noexct/test_engine.h"
+#include "noexct/test-engine.h"
 
-TEST_SUITE(SUITE_NAME)
+SUITE(SUITE_NAME)
 
-TEST_CASE(CASE_NAME_PASS){
+TEST(CASE_NAME_PASS){
     ASSERT_EQ(2,2)
 }
 
-TEST_CASE(CASE_NAME_FAIL){
+TEST(CASE_NAME_FAIL){
     ASSERT_EQ(2,1)
 }
 

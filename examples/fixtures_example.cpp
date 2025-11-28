@@ -1,5 +1,5 @@
 #include <iostream>
-#include "noexct/test_engine.h"
+#include "noexct/test-engine.h"
 
 class SuiteFixture : public noexct::Test {
 public:
@@ -29,7 +29,7 @@ public:
 
 
 
-TEST_SUITE(FIXTURES_EXAMPLE)
+SUITE(FIXTURES_EXAMPLE)
 
 FIXTURE(SuiteFixture)
 
