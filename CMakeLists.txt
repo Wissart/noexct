@@ -15,7 +15,7 @@ endif()
 add_subdirectory(src)
 
 if(NOEXCT_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+    add_subdirectory(docs/examples)
 endif()
 
 
