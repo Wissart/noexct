@@ -1,9 +1,17 @@
 #pragma once
 
-#include "Fixture.h"
 
 
 namespace noexct{
-class Test : public Fixture{
+class SuiteFixture{
+public:
+    virtual ~SuiteFixture() = default;
+    virtual void suite_setup() {};
+    virtual void suite_teardown() {};
+};
+class Test : public SuiteFixture{
+public:
+    virtual void setup() {};
+    virtual void teardown() {};
 };
 }

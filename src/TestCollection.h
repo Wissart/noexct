@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Suite.h"
+#include "TestSuite.h"
 
 namespace noexct{
 class TestCollection{
