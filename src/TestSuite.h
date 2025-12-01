@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "noexct/Fixture.h"
+#include "noexct/Test.h"
 #include "noexct/TestCase.h"
 #include "noexct/SuiteInfo.h"
 

@@ -1,6 +1,6 @@
  set(NOEXCT_SOURCES
-    Exceptions.cpp
-    Suite.cpp
+    TestExceptions.cpp
+    TestSuite.cpp
     TestBuilder.cpp
     TestCollection.cpp
     TestManager.cpp

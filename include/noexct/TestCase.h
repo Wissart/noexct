@@ -4,7 +4,7 @@
 #include <functional>
 #include <chrono>
 
-#include "Exceptions.h"
+#include "TestExceptions.h"
 #include "CaseInfo.h"
 
 namespace noexct{
