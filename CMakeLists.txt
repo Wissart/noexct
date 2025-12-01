@@ -1,50 +1,86 @@
 cmake_minimum_required(VERSION 3.15)
 project(NoExCT VERSION 1.0.0 LANGUAGES CXX)
 
-option(NOEXCT_BUILD_EXAMPLES "Build NoExCT examples" OFF)
+# =============================================================================
+# Configuration Options
+# =============================================================================
 option(NOEXCT_BUILD_SHARED_LIBS "Build NoExCT as shared library" OFF)
+option(NOEXCT_BUILD_EXAMPLES "Build NoExCT examples" OFF)
+option(NOEXCT_INSTALL "Enable NoExCT installation" ON)
 
+#These commands run if this is main project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    message("Build Standalone")
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+    #Setup project settings
     include(ProjectSettings)
-else()
-    message("${CMAKE_PROJECTNAME} not equal ${PROJECT_NAME}")
 endif()
 
+# =============================================================================
+# Components
+# =============================================================================
+
+# Main source
 add_subdirectory(src)
 
+# Examples
 if(NOEXCT_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+    add_subdirectory(docs/examples)
 endif()
 
+# =============================================================================
+# Installation and Package Configuration
+# =============================================================================
+if(NOEXCT_INSTALL)
+    # Installation
+    include(GNUInstallDirs)
 
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
+    install(
+        TARGETS NoExCT
+        EXPORT NoExCTTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
 
-install(
-    EXPORT NoExCTTargets
-    FILE NoExCTTargets.cmake
-    NAMESPACE NoExCT::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NoExCT
-)
+    install(
+        DIRECTORY include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING PATTERN "*.h"
+    )
 
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfigVersion.cmake
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY SameMajorVersion
-)
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/src/noexct_export.h
+        DESTINATION ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}
+    )
+    
+    install(
+        EXPORT NoExCTTargets
+        FILE NoExCTTargets.cmake
+        NAMESPACE NoExCT::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NoExCT
+    )
 
-configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/NoExCTConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NoExCT
-)
+    # Package Configuration
+    include(CMakePackageConfigHelpers)
 
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfig.cmake
+    write_basic_package_version_file(
         ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfigVersion.cmake
-    DESTINATION
-        ${CMAKE_INSTALL_LIBDIR}/cmake/NoExCT
-)
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/NoExCTConfig.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfig.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NoExCT
+    )
+
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfig.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/NoExCTConfigVersion.cmake
+        DESTINATION
+            ${CMAKE_INSTALL_LIBDIR}/cmake/NoExCT
+    )
+endif()

@@ -6,7 +6,7 @@ param(
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $ScriptDir
 $BuildDir = Join-Path $ProjectRoot "build"
-$ExamplesDir = Join-Path $BuildDir "examples/$Config"
+$ExamplesDir = Join-Path $BuildDir "docs/examples/$Config"
 
 if($Configure -or !(Test-Path $ExamplesDir)){
     Write-Host "Configuring project before build examples..." -ForegroundColor White
