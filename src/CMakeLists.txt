@@ -1,13 +1,11 @@
-include(GNUInstallDirs) 
-
-set(NOEXCT_SOURCES
-    test_case.cpp
-    test_suite.cpp
-    test_builder.cpp
-    assertions.cpp
-    runner.cpp
-    test_engine.cpp
-    reporters/console_reporter.cpp
+ set(NOEXCT_SOURCES
+    TestExceptions.cpp
+    TestSuite.cpp
+    TestBuilder.cpp
+    TestCollection.cpp
+    TestManager.cpp
+    TestRunner.cpp
+    reporters/ConsoleReporter.cpp
 )
 
 if(NOEXCT_BUILD_SHARED_LIBS)
@@ -16,9 +14,11 @@ else()
     add_library(NoExCT STATIC ${NOEXCT_SOURCES})
 endif()
 
+add_library(NoExCT::NoExCT ALIAS NoExCT)
+
 include(GenerateExportHeader)
 generate_export_header(NoExCT
-    BASE_NAME NOEXCT
+    BASE_NAME NoExCT
     EXPORT_MACRO_NAME NOEXCT_API
     EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/noexct_export.h
 )
@@ -30,31 +30,9 @@ target_include_directories(NoExCT
         $<INSTALL_INTERFACE:include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/reporters
 )
 
 set_target_properties(NoExCT PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
 )
-
-set_common_compiler_flags(NoExCT)
-
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/noexct_export.h
-    DESTINATION include/noexct
-)
-
-install(TARGETS NoExCT
-    EXPORT NoExCTTargets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} 
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING PATTERN "*.h"
-)
-
-add_library(NoExCT::NoExCT ALIAS NoExCT)
